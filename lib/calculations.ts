@@ -70,30 +70,6 @@ export function formatCurrency(
 	}).format(amount);
 }
 
-export function formatCompactCurrency(
-	amount: number,
-	locale: string = "en-US",
-	currency: string = "USD",
-): string {
-	if (amount >= 1e6) {
-		return new Intl.NumberFormat(locale, {
-			style: "currency",
-			currency,
-			notation: "compact",
-			maximumFractionDigits: 1,
-		}).format(amount);
-	}
-	if (amount >= 1e3) {
-		return new Intl.NumberFormat(locale, {
-			style: "currency",
-			currency,
-			notation: "compact",
-			maximumFractionDigits: 1,
-		}).format(amount);
-	}
-	return formatCurrency(amount, locale, currency);
-}
-
 export function formatAddress(addr: string): string {
 	return addr.length < 8 ? addr : `${addr.slice(0, 4)}...${addr.slice(-4)}`;
 }

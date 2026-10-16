@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Orbitron, Barlow, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
@@ -35,9 +35,37 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 })
 
+const title = "PredictX - Web3 Football Prediction Markets"
+const description = "Stake on football match events, vote on outcomes, and win proportional rewards from the pool"
+
+// Absolute base for OpenGraph/Twitter image URLs. Set NEXT_PUBLIC_SITE_URL in
+// production; Vercel preview deployments fall back to VERCEL_URL.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+
+export const viewport: Viewport = {
+  themeColor: "#0a0e27",
+  colorScheme: "dark",
+}
+
 export const metadata: Metadata = {
-  title: "PredictX - Web3 Football Prediction Markets",
-  description: "Stake on football match events, vote on outcomes, and win proportional rewards from the pool",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  applicationName: "PredictX",
+  openGraph: {
+    type: "website",
+    siteName: "PredictX",
+    url: "/",
+    title,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
   generator: "v0.app",
   icons: {
     icon: [
