@@ -12,7 +12,7 @@ import { formatAddress } from "@/lib/calculations";
 import { STORAGE_KEYS } from "@/lib/mock-data";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
-import { stellar } from "@/lib/stellar";
+import { getHorizonUrl } from "@/lib/stellar";
 
 export interface ConnectPayload {
   address: string;
@@ -78,7 +78,7 @@ async function fetchBalance(
 > {
   try {
     const response = await fetch(
-      `${stellar.getHorizonUrl(network)}/accounts/${publicKey}`,
+      `${getHorizonUrl(network)}/accounts/${publicKey}`,
     );
 
     if (!response.ok) {

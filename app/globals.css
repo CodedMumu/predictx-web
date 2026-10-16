@@ -188,6 +188,26 @@
     text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
   }
 
+  /* text-glow-success — matches the --success CSS variable (neon green) */
+  .text-glow-success {
+    text-shadow: 0 0 20px oklch(0.75 0.2 140 / 0.5);
+  }
+
+  /* text-glow-red — for destructive / wrong-answer highlights */
+  .text-glow-red {
+    text-shadow: 0 0 20px rgba(255, 59, 48, 0.5);
+  }
+
+  /* shadow-text — subtle drop shadow for legibility over busy backgrounds */
+  .shadow-text {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
+  }
+
+  /* no-glow — strips any inherited text-shadow (e.g. on disabled buttons) */
+  .no-glow {
+    text-shadow: none;
+  }
+
   .bg-grid-pattern {
     background-image:
       linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
