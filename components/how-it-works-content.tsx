@@ -285,9 +285,9 @@ export function HowItWorksContent() {
                   <span className="font-mono text-2xl font-black text-danger">$3,000</span>
                 </div>
                 <PoolProgressBar
-                  yesPercentage={30}
-                  yesAmount={3000}
-                  noAmount={7000}
+                  yesPercentage={70}
+                  yesAmount={7000}
+                  noAmount={3000}
                   className="h-4"
                 />
               </div>

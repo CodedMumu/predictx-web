@@ -110,9 +110,9 @@ function RankChip({ rankName, color, glowColor, compact }: RankChipProps) {
       }}
       animate={{
         boxShadow: [
-          `0 0 8px ${glowColor}50`,
+          `0 0 8px ${glowColor.replace(/[\d.]+\)$/, "0.2)")}`,
           `0 0 16px ${glowColor}`,
-          `0 0 8px ${glowColor}50`,
+          `0 0 8px ${glowColor.replace(/[\d.]+\)$/, "0.2)")}`,
         ],
       }}
       transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
