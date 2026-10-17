@@ -279,7 +279,7 @@ export function PollCard({
             </div>
 
             {poll.recentActivity && (
-              <p className="text-xs italic text-muted-foreground/80 leading-tight">
+              <p className="text-xs italic text-muted-foreground leading-tight">
                 {poll.recentActivity}
               </p>
             )}
@@ -407,7 +407,7 @@ export function PollCard({
 
               {/* Social Proof */}
               {poll.recentActivity && (
-                <p className="text-xs italic text-muted-foreground/80 leading-tight">
+                <p className="text-xs italic text-muted-foreground leading-tight">
                   {poll.recentActivity}
                 </p>
               )}

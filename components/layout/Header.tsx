@@ -23,7 +23,7 @@ export function Header() {
     <>
       <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-primary/20">
 
-        <nav className="mx-auto flex max-w-7xl items-center justify-between p-4">
+        <nav aria-label="Main" className="mx-auto flex max-w-7xl items-center justify-between p-4">
 
           {/* Logo */}
           <Link href="/" className="font-display text-xl sm:text-2xl text-primary text-glow-cyan font-bold">
@@ -43,6 +43,7 @@ export function Header() {
                   key={item.name}
                   href={item.href}
                   className="relative text-sm font-bold"
+                  aria-current={isActive ? "page" : undefined}
                 >
 
                   {t(item.key)}
