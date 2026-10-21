@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Scale, CheckCircle2, AlertCircle, Lock } from "lucide-react";
 import { toast } from "sonner";
@@ -49,6 +49,12 @@ function VoteTallyComponent({ poll }: { poll: Poll }) {
 export function VotingCard({ poll, match }: VotingCardProps) {
     const [cardState, setCardState] = useState<CardState>("idle");
     const [selectedDecision, setSelectedDecision] = useState<VoteDecision | null>(null);
+    const focusedBeforeOpenRef = useRef<HTMLElement | null>(null);
+
+    // Save focused element when card mounts
+    useEffect(() => {
+      focusedBeforeOpenRef.current = document.activeElement as HTMLElement | null;
+    }, []);
 
     const { castVote, getVoteReward, getUnclearVotes } = useVoting();
     const { isConnected, connect } = useWallet();
@@ -122,9 +128,20 @@ export function VotingCard({ poll, match }: VotingCardProps) {
     const handleCancel = () => {
         setCardState("idle");
         setSelectedDecision(null);
-    };
+      };
 
-    /**
+      // ── Restore focus on close/vote ────────────────────────────────────────
+      useEffect(() => {
+        if (cardState === "voted") {
+          const element = focusedBeforeOpenRef.current;
+          if (element && element instanceof HTMLElement) {
+            element.focus({ preventScroll: true });
+          }
+          focusedBeforeOpenRef.current = null;
+        }
+      }, [cardState]);
+
+      /**
      * Voting deadline, derived from the poll's own lock time.
      *
      * The previous version hardcoded `2 * 60 * 60 * 1000` onto raw kickoff,
@@ -299,6 +316,8 @@ export function VotingCard({ poll, match }: VotingCardProps) {
 
                     {cardState === "voted" && (
                         <motion.div
+                            role="alert"
+                            aria-live="polite"
                             key="voted-success"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
