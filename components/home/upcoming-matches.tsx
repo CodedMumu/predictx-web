@@ -87,7 +87,7 @@ export function UpcomingMatches() {
                     <p className="text-muted-foreground mb-8">
                         Check back soon! New prediction markets are added regularly.
                     </p>
-                    <GamingButton variant="primary">
+                    <GamingButton variant="primary" href="/voting">
                         Browse All Markets
                     </GamingButton>
                 </div>

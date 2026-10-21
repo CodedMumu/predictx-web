@@ -581,7 +581,7 @@ export function StakeModal({
   }, [open]);
 
   /** Live countdown target, so the modal can show how long is left. */
-  const lockTargetISO = match ? getLockTargetISO(match.kickoff, poll.lockTime) : null;
+  const lockTargetISO = match ? getLockTargetISO(match.kickoff, poll.lockTime, poll.lockTargetISO) : null;
   const msRemaining = match ? msUntilLock(poll, match) : 0;
 
   // ── Validation ─────────────────────────────────────────────────────────
