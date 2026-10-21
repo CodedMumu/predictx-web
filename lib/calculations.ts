@@ -11,6 +11,16 @@ export interface WinningsCalculation {
 export const PLATFORM_FEE = 0.05;
 const FEE = PLATFORM_FEE;
 
+export function calculateGrossPayout(
+	stakeAmount: number,
+	profit?: number,
+	storedGrossPayout?: number,
+): number {
+	if (storedGrossPayout != null) return storedGrossPayout;
+	if (profit == null) return stakeAmount;
+	return (stakeAmount + profit) / (1 - PLATFORM_FEE);
+}
+
 /**
  * Computes fee-adjusted payout, profit, and ROI for a completed winning stake.
  *

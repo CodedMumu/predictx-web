@@ -8,7 +8,7 @@ import { EmptyState } from "./shared/empty-state";
 import { GamingButton } from "./shared/gaming-button";
 import { GlowCard } from "./shared/glow-card";
 import { useStaking } from "@/hooks/use-staking";
-import { calculateCompletedPayout } from "@/lib/calculations";
+import { calculateCompletedPayout, calculateGrossPayout } from "@/lib/calculations";
 import { XLM_USD_RATE } from "@/lib/constants";
 import type { Stake } from "@/lib/mock-data";
 
@@ -25,9 +25,11 @@ function ClaimConfirmDialog({
   onCancel: () => void;
   confirming: boolean;
 }) {
-  const grossPayout =
-    stake.grossPayout ??
-    (stake.profit != null ? stake.amount + stake.profit / 0.95 : stake.amount);
+  const grossPayout = calculateGrossPayout(
+    stake.amount,
+    stake.profit,
+    stake.grossPayout,
+  );
   const payout = calculateCompletedPayout(stake.amount, grossPayout);
 
   return (
@@ -193,11 +195,11 @@ export function CompletedPredictions() {
         <div className="space-y-3">
           {completedStakes.map((stake) => {
             const won = stake.outcome === "won";
-            const grossPayout =
-              stake.grossPayout ??
-              (stake.profit != null
-                ? stake.amount + stake.profit / 0.95
-                : stake.amount);
+            const grossPayout = calculateGrossPayout(
+              stake.amount,
+              stake.profit,
+              stake.grossPayout,
+            );
             const payout = won ? calculateCompletedPayout(stake.amount, grossPayout) : null;
             const isClaiming = processingId === stake.id;
 

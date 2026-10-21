@@ -6,6 +6,7 @@ import { MOCK_STAKES, STORAGE_KEYS, type Stake } from "@/lib/mock-data";
 import {
 	calculatePotentialWinnings,
 	calculateCompletedPayout,
+	calculateGrossPayout,
 	type WinningsCalculation,
 } from "@/lib/calculations";
 import { XLM_USD_RATE } from "@/lib/constants";
@@ -137,12 +138,11 @@ export const useStaking = create<StakingState>()(
 				if (stake.outcome !== "won") throw new Error("Stake was not won");
 				if (stake.claimed) throw new Error("Winnings already claimed");
 
-				// Determine gross payout: use stored grossPayout or derive from profit
-				const grossPayout =
-					stake.grossPayout ??
-					(stake.profit != null
-						? stake.amount + stake.profit / (1 - 0.05)
-						: stake.amount);
+				const grossPayout = calculateGrossPayout(
+					stake.amount,
+					stake.profit,
+					stake.grossPayout,
+				);
 
 				const payout = calculateCompletedPayout(stake.amount, grossPayout);
 				const netPayout = payout.net;
