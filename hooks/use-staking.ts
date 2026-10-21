@@ -94,6 +94,13 @@ export const useStaking = create<StakingState>()(
 				side,
 				amount,
 			) => {
+				// Guard the money path directly: the modal's canSubmit check is the
+				// only validation a caller has to bypass, and stale/future callers
+				// must not be able to push a non-positive or non-finite amount.
+				if (!Number.isFinite(amount) || amount <= 0) {
+					throw new Error("Invalid stake amount");
+				}
+
 				const walletState = useWallet.getState();
 				const address = walletState.address;
 
@@ -140,7 +147,10 @@ export const useStaking = create<StakingState>()(
 				calculatePotentialWinnings(amount, side, yesPool, noPool),
 
 			claimStake: async (stakeId: string) => {
-				const stake = get().stakes.find((s) => s.id === stakeId);
+				// Resolve through the wallet-scoped accessor: every other read path
+				// filters by wallet first, and the unscoped array would let a stake
+				// id belonging to a different account be claimed by this one.
+				const stake = walletStakes(get().stakes).find((s) => s.id === stakeId);
 				if (!stake) throw new Error("Stake not found");
 				if (stake.status !== "completed") throw new Error("Stake is not completed");
 				if (stake.outcome !== "won") throw new Error("Stake was not won");
