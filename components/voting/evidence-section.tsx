@@ -32,6 +32,8 @@ export function EvidenceSection({ matchId, className }: EvidenceSectionProps) {
             <button
                 type="button"
                 onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
+                aria-controls="evidence-section-panel"
                 className="w-full flex items-center justify-between p-4 bg-surface/50 hover:bg-surface transition-colors focus:outline-none"
             >
                 <div className="flex items-center gap-3">
@@ -56,6 +58,7 @@ export function EvidenceSection({ matchId, className }: EvidenceSectionProps) {
             <AnimatePresence initial={false}>
                 {isExpanded && (
                     <motion.div
+                        id="evidence-section-panel"
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}

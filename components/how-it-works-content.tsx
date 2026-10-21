@@ -408,6 +408,8 @@ export function HowItWorksContent() {
             >
               <button
                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                aria-expanded={openFaq === index}
+                aria-controls={`faq-panel-${index}`}
                 className="w-full flex items-center justify-between p-6 text-left"
               >
                 <span className="font-display font-bold text-lg md:text-xl">{faq.q}</span>
@@ -423,6 +425,7 @@ export function HowItWorksContent() {
               </button>
 
               <motion.div
+                id={`faq-panel-${index}`}
                 initial={false}
                 animate={{ height: openFaq === index ? "auto" : 0 }}
                 className="overflow-hidden bg-background-secondary/50"
