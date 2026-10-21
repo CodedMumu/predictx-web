@@ -405,6 +405,9 @@ export const useWallet = create<WalletState>()(
          * check that matters is the one here.
          */
         const liveBalance = useWallet.getState().balance;
+        if (useWallet.getState().address !== state.address) {
+          throw new Error("Wallet changed while the transaction was in progress");
+        }
         if (amountXLM + feeXLM > liveBalance) {
           throw new Error("Insufficient balance");
         }
