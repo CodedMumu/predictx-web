@@ -142,16 +142,14 @@ export const useWallet = create<WalletState>()(
       network: "testnet" as StellarNetwork,
 
       connect: async () => {
-        set({ isConnecting: true });
+        if (get().isConnecting) return;
+
+        set({ isConnecting: true, balanceStatus: "loading", balanceError: null });
 
         try {
-          // 1. Check if installed
           const status = await checkFreighter();
-          // Freighter v2 returns an object, v1 returned a boolean. This handles both!
-          if (
-            !status ||
-            (typeof status === "object" && !status.isConnected)
-          ) {
+          if (!status || (typeof status === "object" && !status.isConnected)) {
+            set({ balanceStatus: "idle", balanceError: null });
             toast.info(
               "Freighter is not installed. Please install the browser extension.",
             );
@@ -172,8 +170,6 @@ export const useWallet = create<WalletState>()(
           if (!publicKey) {
             throw new Error("Failed to retrieve public key");
           }
-
-          set({ balanceStatus: "loading", balanceError: null });
 
           const currentNetwork = get().network;
           const result = await fetchBalance(publicKey, currentNetwork);
@@ -198,9 +194,9 @@ export const useWallet = create<WalletState>()(
             });
           }
 
-          // Analytics — no public key in the payload
           trackEvent({ name: "wallet_connect" });
         } catch (error) {
+          set({ balanceStatus: "idle", balanceError: null });
           console.error("Freighter connect error:", error);
           const message =
             error instanceof Error

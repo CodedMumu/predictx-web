@@ -9,7 +9,7 @@ import { VotingCard } from "@/components/voting/voting-card";
 import { GamingButton } from "@/components/shared/gaming-button";
 
 export default function VotingCenterPage() {
-  const { isConnected, connect } = useWallet();
+  const { isConnected, connect, isConnecting } = useWallet();
   const { availablePolls, getVoteReward, getAccuracy } = useVoting();
   const getMatch = useMockData((state) => state.getMatch);
 
@@ -45,8 +45,8 @@ export default function VotingCenterPage() {
           <p className="text-muted-foreground">
             Connect your wallet to access the Resolution Arena, vote on match outcomes, and earn rewards for your accurate judgments.
           </p>
-          <GamingButton variant="primary" onClick={handleConnect} className="w-full h-14 text-lg">
-            Connect Wallet
+          <GamingButton variant="primary" onClick={handleConnect} disabled={isConnecting} className="w-full h-14 text-lg">
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
           </GamingButton>
         </motion.div>
       </main>

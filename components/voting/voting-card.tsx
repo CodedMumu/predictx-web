@@ -57,7 +57,7 @@ export function VotingCard({ poll, match }: VotingCardProps) {
     }, []);
 
     const { castVote, getVoteReward, getUnclearVotes } = useVoting();
-    const { isConnected, connect } = useWallet();
+    const { isConnected, connect, isConnecting } = useWallet();
 
     const rewardAmount = getVoteReward(poll.id);
 
@@ -251,16 +251,17 @@ export function VotingCard({ poll, match }: VotingCardProps) {
                             exit={{ opacity: 0, scale: 0.95 }}
                             className="grid grid-cols-1 md:grid-cols-3 gap-3"
                         >
-                            <GamingButton variant="primary" onClick={() => handleSelectVote("yes")} className="h-14 text-sm tracking-wider">
+                            <GamingButton variant="primary" onClick={() => handleSelectVote("yes")} disabled={isConnecting} className="h-14 text-sm tracking-wider">
                                 <span className="text-xl mr-2">✓</span> YES
                             </GamingButton>
-                            <GamingButton variant="danger" onClick={() => handleSelectVote("no")} className="h-14 text-sm tracking-wider">
+                            <GamingButton variant="danger" onClick={() => handleSelectVote("no")} disabled={isConnecting} className="h-14 text-sm tracking-wider">
                                 <span className="text-xl mr-2">✗</span> NO
                             </GamingButton>
                             <button
                                 type="button"
                                 onClick={() => handleSelectVote("unclear")}
-                                className="h-14 rounded clip-corner bg-surface border border-border hover:border-muted-foreground hover:bg-surface/80 transition-colors font-bold uppercase tracking-wider text-muted-foreground"
+                                disabled={isConnecting}
+                                className="h-14 rounded clip-corner bg-surface border border-border hover:border-muted-foreground hover:bg-surface/80 transition-colors font-bold uppercase tracking-wider text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 UNCLEAR / DISPUTE
                             </button>
