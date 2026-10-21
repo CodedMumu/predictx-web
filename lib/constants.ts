@@ -206,6 +206,6 @@ export const POLL_QUESTION_MIN_LENGTH = 10; // characters
  * always matches the amount actually debited from the creator's wallet.
  * Soroban: mirrors `poll_creation_fee_stroops` (10000 stroops = 0.001 XLM)
  * in the contract.
- * @example sendTransaction(CREATE_POLL_FEE_XLM, `Create poll: ${question}`)
+ * @example sendTransaction(CREATE_POLL_FEE_XLM * XLM_USD_RATE, `Create poll: ${question}`)
  */
 export const CREATE_POLL_FEE_XLM = 0.001; // XLM
