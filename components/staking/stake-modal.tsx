@@ -39,6 +39,7 @@ import {
   XLM_USD_RATE,
   MOCK_CONTRACT_ID,
   STELLAR_BASE_FEE,
+  STELLAR_NETWORKS,
 } from "@/lib/constants";
 import type { Poll, Match, Stake } from "@/lib/mock-data";
 import { lockTimeLabel } from "@/lib/mock-data";
@@ -150,7 +151,7 @@ function WalletConfirmPopup({
               <div className="flex justify-between">
                 <span className="text-[var(--muted-foreground)]">To</span>
                 <span className="text-foreground">
-                  {formatAddress(MOCK_CONTRACT_ID)}
+                  {formatAddress(activeContractId)}
                 </span>
               </div>
               <div className="h-px bg-[var(--border)]" />
@@ -393,7 +394,7 @@ function SuccessOverlay({
           className="mt-4 inline-flex items-center gap-1 text-xs text-[var(--accent-cyan)] hover:underline"
           onClick={() =>
             window.open(
-              `https://stellar.expert/explorer/testnet/tx/${receipt.hash}`,
+              `${activeExplorerUrl}/tx/${receipt.hash}`,
               "_blank",
             )
           }
@@ -499,7 +500,11 @@ export function StakeModal({
 
   // ── Hooks ──────────────────────────────────────────────────────────────
 
-  const { isConnected, address, balance } = useWallet();
+  const { isConnected, address, balance, network } = useWallet();
+  // Contract + explorer for the wallet's *active* network — hardcoding the
+  // testnet pair mislabels every receipt and link after a mainnet switch.
+  const activeContractId = STELLAR_NETWORKS[network]?.contractId || MOCK_CONTRACT_ID;
+  const activeExplorerUrl = STELLAR_NETWORKS[network]?.explorerUrl || "";
   const { placeStake, calculateWinnings } = useStaking();
 
   // ── Derived ────────────────────────────────────────────────────────────

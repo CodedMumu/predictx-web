@@ -6,6 +6,7 @@ import { requestAccess, isConnected as checkFreighter } from "@stellar/freighter
 import {
   MOCK_CONTRACT_ID,
   STELLAR_BASE_FEE,
+  STELLAR_NETWORKS,
   XLM_USD_RATE,
 } from "@/lib/constants";
 import { formatAddress } from "@/lib/calculations";
@@ -391,7 +392,10 @@ export const useWallet = create<WalletState>()(
           ledger: 50_000_000 + Math.floor(Math.random() * 1_000_000),
           fee: `${STELLAR_BASE_FEE} stroops (${feeXLM.toFixed(7)} XLM)`,
           from: state.address,
-          to: MOCK_CONTRACT_ID,
+          // Name the contract on the network the wallet is actually connected
+          // to, not the hardcoded testnet address. Falls back to the testnet
+          // contract when the active network has no configured contract id.
+          to: STELLAR_NETWORKS[state.network]?.contractId || MOCK_CONTRACT_ID,
           amount: amountUSD,
           amountXLM,
           timestamp: new Date().toISOString(),
