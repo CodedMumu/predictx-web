@@ -119,6 +119,11 @@ function WalletConfirmPopup({
   confirming?: boolean;
 }) {
   const amountXLM = amount / XLM_USD_RATE;
+  // Contract for the wallet's *active* network — hardcoding the testnet
+  // address mislabels the destination after a mainnet switch.
+  const { network } = useWallet();
+  const activeContractId =
+    STELLAR_NETWORKS[network]?.contractId || MOCK_CONTRACT_ID;
 
   return (
     <motion.div
@@ -272,6 +277,10 @@ function SuccessOverlay({
   onClose: () => void;
 }) {
   const [copied, setCopied] = useState(false);
+  // Explorer base for the wallet's *active* network — a hardcoded testnet
+  // path makes successful mainnet transactions unverifiable.
+  const { network } = useWallet();
+  const activeExplorerUrl = STELLAR_NETWORKS[network]?.explorerUrl || "";
 
   const copyHash = async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard) {
@@ -500,11 +509,7 @@ export function StakeModal({
 
   // ── Hooks ──────────────────────────────────────────────────────────────
 
-  const { isConnected, address, balance, network } = useWallet();
-  // Contract + explorer for the wallet's *active* network — hardcoding the
-  // testnet pair mislabels every receipt and link after a mainnet switch.
-  const activeContractId = STELLAR_NETWORKS[network]?.contractId || MOCK_CONTRACT_ID;
-  const activeExplorerUrl = STELLAR_NETWORKS[network]?.explorerUrl || "";
+  const { isConnected, address, balance } = useWallet();
   const { placeStake, calculateWinnings } = useStaking();
 
   // ── Derived ────────────────────────────────────────────────────────────
