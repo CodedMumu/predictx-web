@@ -94,6 +94,7 @@ export const useStaking = create<StakingState>()(
 				amount,
 			) => {
 				const walletState = useWallet.getState();
+				const address = walletState.address;
 
 				// Calls the wallet's simulated Stellar transaction
 				const receipt = await walletState.sendTransaction(
@@ -103,7 +104,7 @@ export const useStaking = create<StakingState>()(
 
 				// Update the poll pool in mock data store, passing the wallet
 				// address so participants counts distinct wallets only
-				const walletAddress = useWallet.getState().address ?? undefined;
+				const walletAddress = address || undefined;
 				useMockData.getState().updatePollPool(pollId, side, amount, walletAddress);
 
 				const stake: Stake = {
@@ -116,7 +117,7 @@ export const useStaking = create<StakingState>()(
 					amount,
 					status: "active",
 					// Scope the stake to the wallet that placed it
-					wallet: walletState.address,
+					wallet: address,
 				};
 
 				set((s) => ({ stakes: [...s.stakes, stake].slice(-MAX_STAKES) }));
