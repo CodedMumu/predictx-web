@@ -192,9 +192,11 @@ function WalletConfirmPopup({
 
 /** Processing state — rotating hexagon with energy bar */
 function ProcessingOverlay() {
-  return (
+return (
     <motion.div
-      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm gap-6"
+      role="alert"
+      aria-live="polite"
+      className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -294,6 +296,8 @@ function SuccessOverlay({
 
   return (
     <motion.div
+      role="alert"
+      aria-live="polite"
       className="absolute inset-0 z-50 flex items-center justify-center overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -475,6 +479,7 @@ export function StakeModal({
   const [errorMsg, setErrorMsg] = useState("");
   const [showWalletModal, setShowWalletModal] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   /**
    * In-flight guard for the wallet-confirm step.
@@ -617,8 +622,23 @@ export function StakeModal({
       setTxStep("idle");
       setReceipt(null);
       setErrorMsg("");
+      previouslyFocusedRef.current = document.activeElement as HTMLElement | null;
     }
   }, [open, initialSide]);
+
+  // ── Restore focus on close ─────────────────────────────────────────────
+  useEffect(() => {
+    if (!open && previouslyFocusedRef.current) {
+      const element = previouslyFocusedRef.current;
+      previouslyFocusedRef.current = null;
+      const tick = () => {
+        if (element && element instanceof HTMLElement && document.body.contains(element)) {
+          element.focus({ preventScroll: true });
+        }
+      };
+      requestAnimationFrame(tick);
+    }
+  }, [open]);
 
   // ── Keyboard handlers ──────────────────────────────────────────────────
 
@@ -734,6 +754,8 @@ export function StakeModal({
         <>
           {/* Overlay */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
             className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
             style={{
               backgroundImage:
