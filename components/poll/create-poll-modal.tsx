@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
     X,
     CheckCircle2,
@@ -396,12 +397,15 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
     const lockDisplay = selectedMatch ? getLockDisplay(form.lockTime, form.customLockTime, selectedMatch.kickoff) : "—";
     const showLivePreview = step >= 3;
 
+    // Radix Dialog supplies role="dialog", aria-modal, the focus trap, Escape
+    // and outside-click dismissal, and focus restoration to the trigger.
+    // Dismissal routes through handleClose, which refuses while submitting.
     return (
-        <>
+        <DialogPrimitive.Root open={open} onOpenChange={(next) => { if (!next) handleClose(); }}>
+          <DialogPrimitive.Portal>
             {/* Overlay */}
-            <div
+            <DialogPrimitive.Overlay
                 className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
-                onClick={handleClose}
                 style={{
                     backgroundImage: "radial-gradient(circle at 50% 50%, rgba(0,217,255,0.03) 0%, transparent 70%)",
                     cursor: submitting ? "not-allowed" : "default",
@@ -410,6 +414,7 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
 
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none">
+              <DialogPrimitive.Content asChild aria-describedby={undefined}>
                 <motion.div
                     initial={{ opacity: 0, scale: 0.92, y: 32 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -432,16 +437,18 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
                     <div className="flex items-center justify-between px-6 py-4 border-b border-primary/20 flex-shrink-0">
                         <div className="flex items-center gap-2">
                             <Zap className="h-5 w-5 text-primary" />
-                            <span className="font-display text-primary uppercase tracking-widest text-sm font-bold">
+                            <DialogPrimitive.Title className="font-display text-primary uppercase tracking-widest text-sm font-bold">
                                 Create Prediction
-                            </span>
+                            </DialogPrimitive.Title>
                         </div>
                         <button
+                            type="button"
                             onClick={handleClose}
                             disabled={submitting}
+                            aria-label="Close"
                             className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded-sm hover:bg-white/5 disabled:opacity-30 disabled:cursor-not-allowed"
                         >
-                            <X className="h-5 w-5" />
+                            <X className="h-5 w-5" aria-hidden="true" />
                         </button>
                     </div>
 
@@ -869,14 +876,18 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
                             </motion.div>
                         )}
                     </AnimatePresence>
-                </motion.div>
-            </div>
 
-            {/* Wallet connect modal (auto-triggered when wallet not connected) */}
-            <WalletConnectModal
-                open={showWalletModal}
-                onClose={() => setShowWalletModal(false)}
-            />
-        </>
+                    {/* Wallet connect modal (auto-triggered when wallet not connected).
+                        Rendered inside Content so Radix treats it as a nested layer
+                        rather than an outside interaction that dismisses the wizard. */}
+                    <WalletConnectModal
+                        open={showWalletModal}
+                        onClose={() => setShowWalletModal(false)}
+                    />
+                </motion.div>
+              </DialogPrimitive.Content>
+            </div>
+          </DialogPrimitive.Portal>
+        </DialogPrimitive.Root>
     );
 }
