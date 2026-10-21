@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Orbitron, Barlow, JetBrains_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@/components/analytics"
 import "./globals.css"
 
 import { Toaster } from "@/components/ui/sonner"
