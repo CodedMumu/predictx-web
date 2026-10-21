@@ -569,12 +569,16 @@ export function StakeModal({
    * Ticks once a second so an open modal locks itself when the deadline passes
    * while the user is filling it in, instead of staying submittable until they
    * happen to re-render for another reason.
+   *
+   * The interval is started only while the modal is open, so it does not burn
+   * CPU (or trigger re-renders on hidden modals mounted by every PollCard).
    */
   const [, forceTick] = useReducer((n: number) => n + 1, 0);
   useEffect(() => {
+    if (!open) return;
     const id = setInterval(forceTick, 1_000);
     return () => clearInterval(id);
-  }, []);
+  }, [open]);
 
   /** Live countdown target, so the modal can show how long is left. */
   const lockTargetISO = match ? getLockTargetISO(match.kickoff, poll.lockTime) : null;

@@ -466,14 +466,16 @@ export function PollCard({
         </div>
       </div>
 
-      <StakeModal
-        poll={poll}
-        matchId={effectiveMatchId}
-        matchName={effectiveMatchName}
-        initialSide={initialSide}
-        open={showStakeModal}
-        onClose={() => setShowStakeModal(false)}
-      />
+      {showStakeModal && (
+        <StakeModal
+          poll={poll}
+          matchId={effectiveMatchId}
+          matchName={effectiveMatchName}
+          initialSide={initialSide}
+          open={showStakeModal}
+          onClose={() => setShowStakeModal(false)}
+        />
+      )}
     </>
   )
 }
