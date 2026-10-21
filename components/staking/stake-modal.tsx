@@ -39,6 +39,7 @@ import {
   XLM_USD_RATE,
   MOCK_CONTRACT_ID,
   STELLAR_BASE_FEE,
+  STELLAR_NETWORKS,
 } from "@/lib/constants";
 import type { Poll, Match, Stake } from "@/lib/mock-data";
 import { lockTimeLabel } from "@/lib/mock-data";
@@ -118,6 +119,11 @@ function WalletConfirmPopup({
   confirming?: boolean;
 }) {
   const amountXLM = amount / XLM_USD_RATE;
+  // Contract for the wallet's *active* network — hardcoding the testnet
+  // address mislabels the destination after a mainnet switch.
+  const { network } = useWallet();
+  const activeContractId =
+    STELLAR_NETWORKS[network]?.contractId || MOCK_CONTRACT_ID;
 
   return (
     <motion.div
@@ -150,7 +156,7 @@ function WalletConfirmPopup({
               <div className="flex justify-between">
                 <span className="text-[var(--muted-foreground)]">To</span>
                 <span className="text-foreground">
-                  {formatAddress(MOCK_CONTRACT_ID)}
+                  {formatAddress(activeContractId)}
                 </span>
               </div>
               <div className="h-px bg-[var(--border)]" />
@@ -273,6 +279,10 @@ function SuccessOverlay({
   onClose: () => void;
 }) {
   const [copied, setCopied] = useState(false);
+  // Explorer base for the wallet's *active* network — a hardcoded testnet
+  // path makes successful mainnet transactions unverifiable.
+  const { network } = useWallet();
+  const activeExplorerUrl = STELLAR_NETWORKS[network]?.explorerUrl || "";
 
   const copyHash = async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard) {
@@ -397,7 +407,7 @@ function SuccessOverlay({
           className="mt-4 inline-flex items-center gap-1 text-xs text-[var(--accent-cyan)] hover:underline"
           onClick={() =>
             window.open(
-              `https://stellar.expert/explorer/testnet/tx/${receipt.hash}`,
+              `${activeExplorerUrl}/tx/${receipt.hash}`,
               "_blank",
             )
           }
