@@ -1010,6 +1010,8 @@ export function StakeModal({
                   <AnimatePresence>
                     {balanceWarning && (
                       <motion.div
+                        role="status"
+                        aria-live="polite"
                         className="flex items-center gap-2 text-xs text-[#ffd700] px-3 py-2 rounded bg-[#ffd700]/10 border border-[#ffd700]/20"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}

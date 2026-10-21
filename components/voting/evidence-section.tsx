@@ -68,7 +68,7 @@ export function EvidenceSection({ matchId, className }: EvidenceSectionProps) {
                                     <p className="text-muted-foreground text-sm font-medium">
                                         Evidence pending review
                                     </p>
-                                    <p className="text-xs text-muted-foreground/70 mt-1">
+                                    <p className="text-xs text-muted-foreground mt-1">
                                         This poll does not have evidence data yet. Check back after the match concludes.
                                     </p>
                                 </div>

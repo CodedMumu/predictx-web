@@ -160,13 +160,17 @@ function generatePollId() {
 /** Step progress indicator */
 function StepIndicator({ step }: { step: number }) {
     return (
-        <div className="flex items-center gap-0 w-full px-1">
+        <div aria-label="Creation steps" className="flex items-center gap-0 w-full px-1">
             {STEPS.map((label, i) => {
                 const idx = i + 1;
                 const done = idx < step;
                 const active = idx === step;
                 return (
-                    <div key={label} className="flex items-center flex-1">
+                    <div
+                        key={label}
+                        className="flex items-center flex-1"
+                        aria-current={active ? "step" : undefined}
+                    >
                         <div className="flex flex-col items-center gap-1 flex-shrink-0">
                             <div
                                 className={cn(
@@ -461,7 +465,10 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
                     <div className="flex flex-1 min-h-0">
                         {/* Form column */}
                         <div className="flex-1 flex flex-col min-h-0 overflow-auto">
-                            <div className="flex-1 px-6 pb-4">
+                            <div className="flex-1 px-6 pb-4" aria-live="polite" aria-atomic="true">
+                                <span className="sr-only">
+                                    Step {step} of 4: {STEPS[step - 1]}
+                                </span>
                                 <AnimatePresence mode="wait">
                                     {step === 1 && (
                                         <motion.div
@@ -556,7 +563,7 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
                                                             <div className="text-xs text-muted-foreground mb-2 leading-relaxed">{cat.description}</div>
                                                             <div className="space-y-0.5">
                                                                 {cat.examples.map((ex) => (
-                                                                    <div key={ex} className="text-[10px] text-muted-foreground/70">• {ex}</div>
+                                                                    <div key={ex} className="text-[10px] text-muted-foreground">• {ex}</div>
                                                                 ))}
                                                             </div>
                                                         </button>
@@ -732,12 +739,16 @@ export function CreatePollModal({ open, onClose, preselectedMatchId }: CreatePol
 
                                             {/* Error */}
                                             {submitError && (
-                                                <div className="flex items-center gap-2 p-3 rounded-lg bg-[#ff006e]/10 border border-[#ff006e]/30 text-sm text-[#ff006e]">
+                                                <div
+                                                    role="alert"
+                                                    aria-live="assertive"
+                                                    className="flex items-center gap-2 p-3 rounded-lg bg-[#ff006e]/10 border border-[#ff006e]/30 text-sm text-[#ff006e]"
+                                                >
                                                     <AlertCircle className="h-4 w-4 flex-shrink-0" />
                                                     <span className="flex-1">{submitError}</span>
                                                     <button
                                                         onClick={() => setSubmitError("")}
-                                                        className="text-[#ff006e]/70 hover:text-[#ff006e] text-xs underline"
+                                                        className="text-[#ff006e] hover:underline text-xs font-semibold underline"
                                                     >
                                                         Retry
                                                     </button>
