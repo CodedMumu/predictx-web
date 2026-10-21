@@ -21,11 +21,16 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
           route: window.location.pathname,
           timestamp: new Date().toISOString(),
         };
-        // Use sendBeacon so the report fires even during unload
+        // Use sendBeacon so the report fires even during unload.
+        // Wrapping the payload in a Blob typed application/json triggers a
+        // CORS preflight, which blocks cross-origin posting to this endpoint.
         if (navigator.sendBeacon) {
+          const blob = new Blob([JSON.stringify(payload)], {
+            type: "application/json",
+          });
           navigator.sendBeacon(
             "/api/report-error",
-            JSON.stringify(payload),
+            blob,
           );
         }
       } catch {

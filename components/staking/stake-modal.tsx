@@ -848,10 +848,10 @@ export function StakeModal({
                 </div>
 
                 {/* ─── Section 2: Side Selection ─── */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
+                <div role="group" aria-labelledby="side-selection-label" className="space-y-3">
+                  <p id="side-selection-label" className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
                     Choose Your Side
-                  </label>
+                  </p>
 
                   <div className="grid grid-cols-2 gap-3">
                     {(["yes", "no"] as const).map((s) => {
@@ -948,7 +948,7 @@ export function StakeModal({
                 {/* ─── Section 3: Stake Amount ─── */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
+                    <label htmlFor="stake-amount-input" className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
                       Stake Amount
                     </label>
                     <span className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)] font-mono">
@@ -958,6 +958,7 @@ export function StakeModal({
                   </div>
 
                   <GamingInput
+                    id="stake-amount-input"
                     type="text"
                     prefix="$"
                     value={amount}
@@ -1152,10 +1153,10 @@ export function StakeModal({
                 </AnimatePresence>
 
                 {/* ─── Section 5: Pool Distribution Pie ─── */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
+                <div role="group" aria-labelledby="pool-distribution-label" className="space-y-2">
+                  <p id="pool-distribution-label" className="text-xs font-bold uppercase tracking-widest text-[var(--muted-foreground)]">
                     Pool Distribution{stakeAmount > 0 ? " (Preview)" : ""}
-                  </label>
+                  </p>
 
                   <div className="flex items-center gap-4">
                     <div className="w-32 h-32 flex-shrink-0">
