@@ -10,7 +10,6 @@ import { useMemo } from "react";
 import { useMockData } from "@/hooks/use-mock-data";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { MatchStatsBar } from "@/components/match";
 
 interface MatchPageClientProps {
   matchId: string;
@@ -24,15 +23,6 @@ export default function MatchPageClient({ matchId }: MatchPageClientProps) {
   const polls = useMemo(
     () => allPolls.filter((p) => p.matchId === matchId),
     [allPolls, matchId],
-  );
-
-  const totalPool = useMemo(
-    () => polls.reduce((sum, p) => sum + p.yesPool + p.noPool, 0),
-    [polls],
-  );
-  const totalParticipants = useMemo(
-    () => polls.reduce((sum, p) => sum + p.participants, 0),
-    [polls],
   );
 
   if (!match) return null;
